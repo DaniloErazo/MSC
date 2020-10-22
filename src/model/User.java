@@ -22,12 +22,33 @@ public class User{
 		this.uploadedSongs=uploadedSongs;
 		category=Category.NEWBIE;
 	}
+	
+	/**
+	 * Returns the user's nickname 
+	 * @return nickname 
+	*/
+	public String getNickname(){
+		return nickname;
+	}
+	
+	/**
+	 * Returns the quantity of uploaded songs 
+	 * @return quantity of songs 
+	*/
 	public int getUploadedSongs(){
 		return uploadedSongs;
 	}
+	/**
+	* sets the quantity of uploaded songs 
+	* @param uploadedSongs number of uploaded songs  
+	*/
 	public void setUploadedSongs(int uploadedSongs){
 		this.uploadedSongs=uploadedSongs;
 	}
+	/**
+	* sets the category for the user 
+	* @param category category to update 
+	*/
 	public void setCategory(Category category){
 		this.category=category;
 	}
@@ -40,27 +61,27 @@ public class User{
 	* @return categoryUpdate it's the new category in case it's changed 
 	*/
 	public Category defineCategory(int uploadedSongs){
-		Category category=null;
+		Category categoryUpdate=null;
 		if(uploadedSongs<3){
-			category=Category.NEWBIE;
+			categoryUpdate=Category.NEWBIE;
 		}else if(uploadedSongs>3 && uploadedSongs<10){
-			category=Category.LITTLE_CONTRIBUTOR;
+			categoryUpdate=Category.LITTLE_CONTRIBUTOR;
 		}else if(uploadedSongs>= 10 && uploadedSongs<30){
-			category=Category.MILD_CONTRIBUTOR;
+			categoryUpdate=Category.MILD_CONTRIBUTOR;
 		} else if (uploadedSongs>30){
-			category=Category.STAR_CONTRIBUTOR;
+			categoryUpdate=Category.STAR_CONTRIBUTOR;
 		}
 		return categoryUpdate;
 	}
 	/**
-	 * Method that produces a String with the information of a user
+	 * Method that produces a String with some of the user's information 
 	 */
 	public String toString(){
-		String infoUser= "*************  User **************/n"+
-		"**  UserName: " + nickname + "/n"+
-		"**  Age: " + age + "/n"+
-		"**  Category: " + category + "/n"+
-		"***********************************";
+		String infoUser= "*************  User **************\n"+
+		"**  UserName: " + nickname + "\n"+
+		"**  Age: " + age + "\n"+
+		"**  Category: " + category + "\n"+
+		"***********************************\n";
 		return infoUser;
 	}
 }

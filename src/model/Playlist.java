@@ -28,10 +28,10 @@ public class Playlist{
 	 * Method that produces a String with the information of a playlist
 	 */
 	public String toString(){
-		String infoSong= "*************  Playlist **************/n"+
-		"**  Title: " + name + "/n"+
-		"**  Duration: " + duration.getHour() + ":" + duration.getMinutes() + ":" + duration.getSeconds() + "/n"+
-		"**  Genre: " + genre + "/n"+
+		String infoSong= "*************  Playlist **************\n"+
+		"**  Title: " + name + "\n"+
+		"**  Duration: " + duration.getHour() + ":" + duration.getMinutes() + ":" + duration.getSeconds() + "\n"+
+		"**  Genre: " + genre + "\n"+
 		"***********************************";
 		return infoSong;
 	}

@@ -24,14 +24,21 @@ public class Song{
 		this.genre=genre;
 	}
 	/**
-	 * Method that produces a String with the information of a song 
+	 * Returns the name of the song  
+	 * @return title song's name  
+	*/
+	public String getTitle(){
+		return title;
+	}
+	/**
+	 * Method that produces a String with the some of the information of a song 
 	 */
 	public String toString(){
-		String infoSong= "*************  Song **************/n"+
-		"**  Title: " + title + "/n"+
-		"**  Artist: " + artist + "/n"+
-		"**  Duration: " + duration.getHour() + ":" + duration.getMinutes() + ":" + duration.getSeconds() + "/n"+
-		"**  Genre: " + genre + "/n"+
+		String infoSong= "*************  Song **************\n"+
+		"**  Title: " + title + "\n"+
+		"**  Artist: " + artist + "\n"+
+		"**  Duration: " + duration.getHour() + ":" + duration.getMinutes() + ":" + duration.getSeconds() + "\n"+
+		"**  Genre: " + genre + "\n"+
 		"***********************************";
 		return infoSong;
 	}
