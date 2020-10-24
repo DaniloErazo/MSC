@@ -1,11 +1,10 @@
 package model;
 public class Playlist{
-	private String name;
-	private String genre;
-	
+	protected String name;
+	protected String genre;
 	
 	//Relations
-	private Duration duration;
+	protected Duration duration;
 	
 	/**
 	 * Constructor that creates a new playlist with duration 0:0:0 and empty genre 

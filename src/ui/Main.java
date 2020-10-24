@@ -9,7 +9,16 @@ public class Main{
 	
 	public static void main(String[] args){
 		Main ppal = new Main();
+		
+		int option=0;
+		
+		do{
+			option= ppal.showMenu();
+			ppal.executeOperation(option);
+			
+		}while (option!=0);
 	}
+	
 	/**
 	 * Constructor that creates one object of the MSC class in order to 
 	 * initialize the application 
@@ -17,6 +26,87 @@ public class Main{
 	public Main(){
 		mscManager = new MSC();
 	}
+	
+	public int showMenu() {
+		int option=0;
+
+		System.out.println(
+				"Menú principal, seleccione una opción\n" +
+				"(1) Crear nuevo usuario \n" +
+				"(2) Mostrar los usuarios registrados \n" +
+				"(3) Subir una canción al pool de canciones \n"+
+				"(4) Mostrar la lista de canciones en pool \n" +
+				"(5) Crear una playlist\n"+
+				"(6) Mostrar las playlist creadas \n" +
+				"(7) Añadir canción a playlist \n" +  
+				"(0) Para salir"
+				);
+		option= sc.nextInt();
+		sc.nextLine();
+		return option;
+	}
+	
+	public void executeOperation(int operation) {
+		
+		switch(operation) {
+		case 0:
+			System.out.println("Bye!");
+			break;
+		case 1:
+			createUser() ;
+			break;
+		case 2:
+			System.out.println(mscManager.showUsers());
+			break;
+	
+		case 3:
+			createSong();
+			break;
+
+		case 4:
+			System.out.println(mscManager.showSongs());
+			break;
+		case 5:
+			playlistMenu();
+			break;
+		case 6:
+			//System.out.println(mscManager.showPlaylists());
+			break;
+		case 7:
+			//Metodo añadir cancion a playlist;
+			break;
+		default:
+			System.out.println("Error, opción no válida");
+		
+		}
+	}
+	private void playlistMenu() {
+		int option2=0;
+		System.out.println(
+				"Menú de Playlist \n" +
+				"(1) Para crear playlist público\n" +
+				"(2) Para crear playlist restringido\n"+
+				"(3) Para crear playlist privado \n"+
+				"(0) Para volver"
+				);
+		option2= sc.nextInt();
+		sc.nextLine();
+		
+		switch(option2) {
+		case 1:
+			
+			break;
+		case 2:
+			
+			break;
+		case 3: 
+			
+			break;
+		
+		}
+	}
+	
+	
 	/**
 	 * createUser is a method that asks for the necessary information to add a new user, 
 	 * it also validates the information provided 
@@ -60,6 +150,7 @@ public class Main{
 				}
 			}
 			mscManager.addUser(nickname, password, age, 0);
+			System.out.println("El usuario " + nickname + " ha sido creado");
 		} else{
 			System.out.println("No se puede crear más usuarios, se ha alcanzado el máximo permitido");
 		}
@@ -158,6 +249,7 @@ public class Main{
 		} 
 		
 	}
+	
 
 
 }

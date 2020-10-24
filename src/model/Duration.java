@@ -48,5 +48,25 @@ public class Duration{
 	*/
 	public void setSeconds(int seconds){
 		this.seconds=seconds;
-}
+	}
+	public int[] adjustDuration(int hour, int minute, int second){
+		int[] durationPartsAdjusted = new int[2];
+		int minuteAux=0;
+		int hourAux=0;
+		if(second>59){
+			minuteAux=second/60;
+			second= second%60;
+		}
+		if(minute>59){
+			hourAux=minute/60;
+			minute= minute%60;
+		}
+		minute= minute+minuteAux;
+		hour= hour+hourAux;
+		durationPartsAdjusted[0]=second;
+		durationPartsAdjusted[1]=minute;
+		durationPartsAdjusted[2]=hour;
+		
+		return durationPartsAdjusted;
+	}
 }
