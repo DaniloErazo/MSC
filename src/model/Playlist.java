@@ -19,6 +19,10 @@ public class Playlist{
 		return genre;
 	}
 	
+	public String getName(){
+		return name;
+	}
+	
 	public void setGenre(String genre){
 		this.genre=genre;
 	}

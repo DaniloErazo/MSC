@@ -70,7 +70,7 @@ public class Main{
 			playlistMenu();
 			break;
 		case 6:
-			//System.out.println(mscManager.showPlaylists());
+			System.out.println(mscManager.showPlaylists());
 			break;
 		case 7:
 			//Metodo añadir cancion a playlist;
@@ -94,7 +94,7 @@ public class Main{
 		
 		switch(option2) {
 		case 1:
-			
+			createPublicPlaylist();
 			break;
 		case 2:
 			
@@ -245,11 +245,35 @@ public class Main{
 				}
 			}
 		}else{
-			System.out.println("No se puede añadir más canciones, se ha alcanzado el máximo permitido");
+			JOptionPane.showMessageDialog(null,"No se puede añadir más canciones, se ha alcanzado el máximo permitido");
 		} 
 		
 	}
 	
-
+	public void createPublicPlaylist(){
+		String playlistName= "";
+		boolean inputAccepted=false;
+		if(mscManager.spaceAvailablePlaylist()){
+			
+			while(!inputAccepted){
+				playlistName = JOptionPane.showInputDialog("Ingrese el nombre de la playlist");
+				
+				if(playlistName==null){
+					inputAccepted=true;
+				}
+				if (playlistName.equals("")){
+					JOptionPane.showMessageDialog(null, "No puede dejar el nombre vacío","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if (mscManager.findPlaylist(playlistName)){
+					JOptionPane.showMessageDialog(null, "Nombre no disponible, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else{
+					inputAccepted=true;
+					mscManager.addPublicPlaylist(playlistName);
+					JOptionPane.showMessageDialog(null,"La playlist " + playlistName + " ha sido creada");
+				}
+			}
+		} else{
+			JOptionPane.showMessageDialog(null,"No se puede crear, se ha alcanzado el máximo de playlists");
+		} 
+	}
 
 }

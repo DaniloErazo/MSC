@@ -99,6 +99,18 @@ public class MSC{
 		numSongs++;
 	}
 	
+	public void addPublicPlaylist(String name){
+		int emptyIndex=0; 
+		boolean emptyFound=false;
+		for (int i=0; i<MAX_PLAYLIST && !emptyFound ; i++){
+			if(playlists[i]==null){
+				emptyIndex=i;
+				emptyFound=true;
+			}
+		}
+		playlists[emptyIndex] = new PublicPlaylist(name);
+	}
+	
 	/**
 	 * showUsers method that returns the information of all the users in the MSC <br>
 	 * @return usersListInfo, String with all the information
@@ -166,6 +178,18 @@ public class MSC{
 		return found;
 	}
 	
+	public boolean findPlaylist(String title) { 
+		boolean found=false;
+		for (int i=0; i<MAX_PLAYLIST && !found; i++){
+			Playlist playlistAux= playlists[i];
+			if(playlistAux!=null && playlistAux.getName().equals(title)){
+				found=true;
+			}
+		}
+		return found;
+	}
+	
+	
 	/**
 	 * showSongs method that returns the information of all the songs in the MSC <br>
 	 * @return songsListInfo, String with all the information
@@ -178,6 +202,20 @@ public class MSC{
 			}
 		}
 		return songsListInfo;
+	}
+	
+	/**
+	 * showPlaylists method that returns the information of all the playlists in the MSC <br>
+	 * @return playlistsInfo, String with all the information
+	 */
+	public String showPlaylists(){
+		String playlistsInfo="";
+		for (int i=0; i<MAX_PLAYLIST; i++){
+			if(playlists[i]!=null){
+				playlistsInfo+= playlists[i].toString();
+			}
+		}
+		return playlistsInfo;
 	}
 }
 
