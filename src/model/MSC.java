@@ -47,6 +47,10 @@ public class MSC{
 		return numUsers<MAX_PLAYLIST;
 	}
 	
+	public User getUser(int index){
+		return users[index];
+	}
+	
 	/**
 	 * Method that adds a new user <br>
 	 * <b> pre: </b> array users is initialized. There isn't another user with the same nickname. There are empty indexes <br>  
@@ -111,6 +115,35 @@ public class MSC{
 		playlists[emptyIndex] = new PublicPlaylist(name);
 	}
 	
+	public void addPrivatePlaylist(String name, int userIndex){
+		int emptyIndex=0; 
+		boolean emptyFound=false;
+		User userOwner = users[userIndex];
+		for (int i=0; i<MAX_PLAYLIST && !emptyFound ; i++){
+			if(playlists[i]==null){
+				emptyIndex=i;
+				emptyFound=true;
+			}
+		}
+		playlists[emptyIndex] = new PrivatePlaylist(name, userOwner);
+	}
+	
+	public void addRestrictedPlaylist(String name, int userIndex){
+		int emptyIndex=0; 
+		boolean emptyFound=false;
+		User userOwner = users[userIndex];
+		for (int i=0; i<MAX_PLAYLIST && !emptyFound ; i++){
+			if(playlists[i]==null){
+				emptyIndex=i;
+				emptyFound=true;
+			}
+		}
+		playlists[emptyIndex] = new RestrictedPlaylist(name, userOwner);
+	}
+	public void addAuthorizedUserRestricted(String playlistName, int userIndex){
+		
+	}
+	
 	/**
 	 * showUsers method that returns the information of all the users in the MSC <br>
 	 * @return usersListInfo, String with all the information
@@ -150,17 +183,22 @@ public class MSC{
 	/**
 	 * findUser is a method that informs if an user's nickname already exists 
 	 * @param nickname is the nickname to look for 
-	 * @return found if it exists, it's true and if it doesn't it's false 
+	 * @return found if it exists, it's true and if it doesn't it's false  //!!!!!
 	 */
-	public boolean findUser(String nickname) { 
-		boolean found=false;
-		for (int i=0; i<MAX_USERS && !found; i++){
+	public int[] findUser(String nickname) { 
+		int[] userFoundData = new int[2];
+		int found=0;
+		int index=0;
+		for (int i=0; i<MAX_USERS && found!=1; i++){
 			User userAux= users[i];
 			if(userAux!=null && userAux.getNickname().equals(nickname)){
-				found=true;
+				found=1;
+				index=i;
 			}
 		}
-		return found;
+		userFoundData[0]=found;
+		userFoundData[1]=index;
+		return userFoundData;
 	}
 	/**
 	 * findSong is a method that informs if a song's title already exists 

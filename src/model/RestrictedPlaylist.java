@@ -6,10 +6,10 @@ public class RestrictedPlaylist extends Playlist{
 	private int numberUsers;
 	
 	public RestrictedPlaylist(String name, User authorizedUser){
-		super(String name);
+		super(name);
 		this.authorizedUsers = new User[MAX_AUSERS];
-		this.authorizedUser[0]=authorizedUser;
-		this. numberUsers=1;
+		authorizedUsers[0]=authorizedUser;
+		this.numberUsers=1;
 	}
 	
 	public boolean availableSpace(){
@@ -22,7 +22,20 @@ public class RestrictedPlaylist extends Playlist{
 		this.numberUsers=numberUsers;
 	}
 	
-	@override 
+	public void addAuthorizedUser(User newUser){
+		boolean emptyFound=false;
+		for (int i=0; i<MAX_AUSERS && !emptyFound ; i++){
+			
+			if(authorizedUsers[i]==null){
+				authorizedUsers[i]=newUser;
+				numberUsers++;
+				emptyFound=true;
+			}
+			
+		}
+	}
+	
+	@Override 
 	public String toString(){
 		String infoSong= "*************  Playlist **************\n"+
 		"**  Title: " + name + "\n"+

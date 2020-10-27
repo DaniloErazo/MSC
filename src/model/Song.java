@@ -39,7 +39,7 @@ public class Song{
 		"**  Artist: " + artist + "\n"+
 		"**  Duration: " + duration.getHour() + ":" + duration.getMinutes() + ":" + duration.getSeconds() + "\n"+
 		"**  Genre: " + genre + "\n"+
-		"***********************************";
+		"***********************************\n";
 		return infoSong;
 	}
 }

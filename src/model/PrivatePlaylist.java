@@ -3,15 +3,15 @@ package model;
 public class PrivatePlaylist extends Playlist{
 	private User authorizedUser;
 	
-	public PrivatePlaylist(User authorizedUser){
-		super(String name);
+	public PrivatePlaylist(String name, User authorizedUser){
+		super(name);
 		this.authorizedUser=authorizedUser;
 	}
 	
-	public String getAuthorizedUser(){
+	public User getAuthorizedUser(){
 		return authorizedUser;
 	}
-	@override 
+	@Override 
 	public String toString(){
 		String infoSong= "*************  Playlist **************\n"+
 		"**  Title: " + name + "\n"+
