@@ -2,6 +2,7 @@ package model;
 import model.User;
 import model.Song;
 import model.Playlist;
+import model.RestrictedPlaylist;
 public class MSC{
 	public final static int MAX_USERS= 10;
 	public final static int MAX_PLAYLIST= 20;
@@ -45,6 +46,10 @@ public class MSC{
 	 */
 	public boolean spaceAvailablePlaylist(){
 		return numUsers<MAX_PLAYLIST;
+	}
+	
+	public Playlist getPlaylist(int index){
+		return playlists[index];
 	}
 	
 	public User getUser(int index){
@@ -140,10 +145,23 @@ public class MSC{
 		}
 		playlists[emptyIndex] = new RestrictedPlaylist(name, userOwner);
 	}
-	public void addAuthorizedUserRestricted(String playlistName, int userIndex){
+	public void addAuthorizedUserRestricted(int playlistPosition, int userIndex){
+		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[playlistPosition];
+		User newUser = users[userIndex];
+		auxiliar.addAuthorizedUser(newUser);
 		
 	}
-	
+	public boolean checkRepeatedUser(String nickname, int position){
+		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[position];
+		boolean repeated = auxiliar.repeatedAuthorizedUser(nickname);
+		return repeated;
+	}
+	public boolean findAuthorizedUser(String nickname, int position){
+		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[position];
+		boolean found = auxiliar.findAuthorizedUser(nickname);
+		
+		return found;
+	}
 	/**
 	 * showUsers method that returns the information of all the users in the MSC <br>
 	 * @return usersListInfo, String with all the information
@@ -216,17 +234,42 @@ public class MSC{
 		return found;
 	}
 	
-	public boolean findPlaylist(String title) { 
-		boolean found=false;
-		for (int i=0; i<MAX_PLAYLIST && !found; i++){
+	public int[] findPlaylist(String name) { 
+		int[] playlistFoundData = new int[2];
+		int found=0;
+		int index=0;
+		for (int i=0; i<MAX_PLAYLIST && found!=1; i++){
 			Playlist playlistAux= playlists[i];
-			if(playlistAux!=null && playlistAux.getName().equals(title)){
-				found=true;
+			if(playlistAux!=null && playlistAux.getName().equals(name)){
+				found=1;
+				index=i;
 			}
 		}
-		return found;
+		playlistFoundData[0]=found;
+		playlistFoundData[1]=index;
+		return playlistFoundData;
 	}
 	
+	public boolean findPlaylistType(int type, int position){
+		boolean typeFound=false;
+		
+		/*if(type==1){
+			if(playlists[position] instanceof PublicPlaylist){
+				typeFound=true;
+			}
+		}else if(type==2){
+			if(playlists[position] instanceof PrivatePlaylist){
+				typeFound=true;
+			}
+		}else if (type==3){
+			if(playlists[position] instanceof RestrictedPlaylist){
+				typeFound=true;
+			}
+		}
+		*/
+		
+		return (playlists[position] instanceof RestrictedPlaylist);
+	}
 	
 	/**
 	 * showSongs method that returns the information of all the songs in the MSC <br>

@@ -36,9 +36,9 @@ public class Main{
 				"(2) Mostrar los usuarios registrados \n" +
 				"(3) Subir una canción al pool de canciones \n"+
 				"(4) Mostrar la lista de canciones en pool \n" +
-				"(5) Crear una playlist\n"+
-				"(6) Mostrar las playlist creadas \n" +
-				"(7) Añadir canción a playlist \n" +  
+				"(5) Crear y gestionar una playlist\n"+
+				"(6) Mostrar las playlist creadas \n" + 
+				"(7) Para añadir canción a playlist \n"+
 				"(0) Para salir"
 				);
 		option= sc.nextInt();
@@ -72,9 +72,6 @@ public class Main{
 		case 6:
 			System.out.println(mscManager.showPlaylists());
 			break;
-		case 7:
-			//Metodo añadir cancion a playlist;
-			break;
 		default:
 			System.out.println("Error, opción no válida");
 		
@@ -85,8 +82,9 @@ public class Main{
 		System.out.println(
 				"Menú de Playlist \n" +
 				"(1) Para crear playlist público\n" +
-				"(2) Para crear playlist restringido\n"+
+				"(2) Para crear y administrar playlist restringido\n"+
 				"(3) Para crear playlist privado \n"+
+				"(4) Para puntuar playlist público \n"+
 				"(0) Para volver"
 				);
 		option2= sc.nextInt();
@@ -97,10 +95,31 @@ public class Main{
 			createPublicPlaylist();
 			break;
 		case 2:
-			createRestrictedPlaylist();
+			restrictedPlaylistMenu();
 			break;
 		case 3: 
 			createPrivatePlaylist();
+			break;
+		
+		}
+	}
+	private void restrictedPlaylistMenu() {
+		int option3=0;
+		System.out.println(
+				"Menú de Playlist Restringida \n" +
+				"(1) Para crear playlist restringido\n" +
+				"(2) Para añadir usuario autorizado\n"+
+				"(0) Para volver"
+				);
+		option3= sc.nextInt();
+		sc.nextLine();
+		
+		switch(option3) {
+		case 1:
+			createRestrictedPlaylist();
+			break;
+		case 2:
+			addAuthorizedUser();
 			break;
 		
 		}
@@ -278,10 +297,12 @@ public class Main{
 			while(!inputAccepted){
 				playlistName = JOptionPane.showInputDialog("Ingrese el nombre de la playlist");
 				
+				int[] playlistData = mscManager.findPlaylist(playlistName);
+				
 				if(playlistName != null){
 						if (playlistName.equals("")){
 						JOptionPane.showMessageDialog(null, "No puede dejar el nombre vacío","ERROR", JOptionPane.WARNING_MESSAGE);
-					} else if (mscManager.findPlaylist(playlistName)){
+					} else if (playlistData[0]==1){
 						JOptionPane.showMessageDialog(null, "Nombre no disponible, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE);
 					} else{
 						inputAccepted=true;
@@ -323,14 +344,15 @@ public class Main{
 					userName=userNick.getText();
 					namePlaylist=playlistName.getText();
 					int[] userData = mscManager.findUser(userName);
+					int[] playlistData = mscManager.findPlaylist(namePlaylist);
 					
 					if(userData[0]==0){
 						JOptionPane.showMessageDialog(null, "Usuario no encontrado","ERROR", JOptionPane.WARNING_MESSAGE);
 					} else if (namePlaylist.equals("")){
 						JOptionPane.showMessageDialog(null, "No puede dejar el nombre vacío","ERROR", JOptionPane.WARNING_MESSAGE);
-					} else if (mscManager.findPlaylist(namePlaylist)){
+					} else if (playlistData[0]==1){
 						JOptionPane.showMessageDialog(null, "Nombre no disponible, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE);
-					} else{
+					}else {
 						inputAccepted=true;
 						mscManager.addPrivatePlaylist(namePlaylist, userData[1]);
 						JOptionPane.showMessageDialog(null,"La playlist " + namePlaylist + " ha sido creada");
@@ -367,6 +389,7 @@ public class Main{
 					userName=userNick.getText();
 					namePlaylist=playlistName.getText();
 					int[] userData = mscManager.findUser(userName);
+					int[] playlistData = mscManager.findPlaylist(namePlaylist);
 					
 					if (userName== ""){
 						JOptionPane.showMessageDialog(null, "No puede dejar el usuario vacío","ERROR", JOptionPane.WARNING_MESSAGE);
@@ -374,7 +397,7 @@ public class Main{
 						JOptionPane.showMessageDialog(null, "Usuario no encontrado","ERROR", JOptionPane.WARNING_MESSAGE);
 					} else if (namePlaylist.equals("")){
 						JOptionPane.showMessageDialog(null, "No puede dejar el nombre vacío","ERROR", JOptionPane.WARNING_MESSAGE);
-					} else if (mscManager.findPlaylist(namePlaylist)){
+					} else if (playlistData[0]==1){
 						JOptionPane.showMessageDialog(null, "Nombre no disponible, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE);
 					} else{
 						inputAccepted=true;
@@ -387,4 +410,64 @@ public class Main{
 			JOptionPane.showMessageDialog(null,"No se puede crear, se ha alcanzado el máximo de playlists");
 		}
 	}
+
+	public void addAuthorizedUser(){
+		String currentUser="";
+		String newUser="";
+		String playlistName="";
+		boolean inputAccepted=false;
+		
+		JTextField oldUser = new JTextField();
+		JTextField addUser = new JTextField();
+		JTextField playlist = new JTextField();
+		
+		//Create several inputs
+		Object [] fields = {
+			"Playlist", playlist,
+			"Usuario autorizado", oldUser,
+			"Usuario a añadir", addUser
+		};
+		int n = JOptionPane.showConfirmDialog(null,fields,"Añadir usuario autorizado a playlist restringida",JOptionPane.OK_CANCEL_OPTION);
+		
+		while(!inputAccepted){
+			if(JOptionPane.CANCEL_OPTION==n){
+			inputAccepted=true;
+			}else{
+				playlistName=playlist.getText();
+				currentUser=oldUser.getText();
+				newUser=addUser.getText();
+
+				int[] userData = mscManager.findUser(currentUser);
+				int[] userData2 = mscManager.findUser(currentUser);
+				int[] playlistData = mscManager.findPlaylist(playlistName);
+				
+				if (playlist.equals("")) {
+				  JOptionPane.showMessageDialog(null, "No puede dejar el nombre de playlist vacío","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if (currentUser.equals("")){
+					JOptionPane.showMessageDialog(null, "No puede dejar el usuario autorizado vacío","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if(newUser.equals("")){
+					JOptionPane.showMessageDialog(null, "No puede dejar el nuevo usuario autorizado vacío","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if(playlistData[0]!=1){
+					JOptionPane.showMessageDialog(null, "La playlist no existe, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE);
+				 /*else if(!mscManager.findPlaylistType(3, playlistData[1])){
+					JOptionPane.showMessageDialog(null, "La playlist no es restringida, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE); */
+				} else if(userData[0]!=1){
+					JOptionPane.showMessageDialog(null, "El usuario autorizado no existe","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if(userData2[0]!=1){
+					JOptionPane.showMessageDialog(null, "El usuario a autorizar no existe","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if(!mscManager.findAuthorizedUser(currentUser, playlistData[1])){
+					JOptionPane.showMessageDialog(null, "El usuario autorizado no tiene derechos en esta playlist","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if(!mscManager.checkRepeatedUser(newUser, playlistData[1])){
+					JOptionPane.showMessageDialog(null, "El usuario a autorizar ya tiene derechos sobre esta playlist","ERROR", JOptionPane.WARNING_MESSAGE);
+				}else{
+					mscManager.addAuthorizedUserRestricted(playlistData[1], userData2[1]);
+					inputAccepted=true;
+				}
+			}
+		} 
+		
+	}
+
+
+
 }

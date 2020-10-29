@@ -31,19 +31,39 @@ public class RestrictedPlaylist extends Playlist{
 				numberUsers++;
 				emptyFound=true;
 			}
-			
 		}
 	}
 	
+	public boolean repeatedAuthorizedUser(String nickname){
+		boolean repeated=false;
+		for(int i=0; i<MAX_AUSERS & !repeated; i++){
+			if(authorizedUsers[i].getNickname().equals(nickname)){
+				repeated=true;
+			}
+		}
+		return repeated;
+	}
+	
+	public boolean findAuthorizedUser(String nickname){
+		boolean found= false;
+		for(int i=0; i<MAX_AUSERS & !found; i++){
+			if(authorizedUsers[i].getNickname()== nickname){
+				found=true;
+			}
+		}
+		return found;
+	}
+	
+	public boolean authorizedUserAvailable(){
+		return numberUsers<MAX_AUSERS;
+	}
+	
 	@Override 
-	public String toString(){
-		String infoSong= "*************  Playlist **************\n"+
-		"**  Title: " + name + "\n"+
-		"**  Duration: " + duration.getHour() + ":" + duration.getMinutes() + ":" + duration.getSeconds() + "\n"+
-		"**  Genre: " + genre + "\n"+
+	public String infoPlaylist(){
+		String infoPlaylist= super.toString() +
 		"**  Authorized user: " + getAllUsersNames() + "\n"+
 		"***********************************\n";
-		return infoSong;
+		return infoPlaylist;
 	}
 	public String getAllUsersNames(){
 		String allNames="";

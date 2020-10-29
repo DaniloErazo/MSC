@@ -12,14 +12,11 @@ public class PrivatePlaylist extends Playlist{
 		return authorizedUser;
 	}
 	@Override 
-	public String toString(){
-		String infoSong= "*************  Playlist **************\n"+
-		"**  Title: " + name + "\n"+
-		"**  Duration: " + duration.getHour() + ":" + duration.getMinutes() + ":" + duration.getSeconds() + "\n"+
-		"**  Genre: " + genre + "\n"+
+	public String infoPlaylist(){
+		String infoPlaylist= super.toString() +
 		"**  Authorized user: " + authorizedUser.getNickname() + "\n"+
 		"***********************************\n";
-		return infoSong;
+		return infoPlaylist;
 	}
 
 
