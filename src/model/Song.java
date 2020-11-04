@@ -30,6 +30,15 @@ public class Song{
 	public String getTitle(){
 		return title;
 	}
+	
+	public Duration getDuration(){
+		return duration;
+	}
+	
+	public Genre getGenre(){
+		return genre;
+	}
+	
 	/**
 	 * Method that produces a String with the some of the information of a song 
 	 */

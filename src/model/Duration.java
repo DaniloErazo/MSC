@@ -50,7 +50,7 @@ public class Duration{
 		this.seconds=seconds;
 	}
 	public int[] adjustDuration(int hour, int minute, int second){
-		int[] durationPartsAdjusted = new int[2];
+		int[] durationPartsAdjusted = new int[3];
 		int minuteAux=0;
 		int hourAux=0;
 		if(second>59){

@@ -72,6 +72,9 @@ public class Main{
 		case 6:
 			System.out.println(mscManager.showPlaylists());
 			break;
+		case 7:
+			addSongToPlaylist();
+			break;
 		default:
 			System.out.println("Error, opción no válida");
 		
@@ -100,9 +103,12 @@ public class Main{
 		case 3: 
 			createPrivatePlaylist();
 			break;
-		
+		case 4:
+			rankPublicPlaylist();
+			break;
 		}
 	}
+	
 	private void restrictedPlaylistMenu() {
 		int option3=0;
 		System.out.println(
@@ -171,7 +177,7 @@ public class Main{
 						} else {
 							inputAccepted1=true;
 							mscManager.addUser(nickname, password, age, 0);
-							System.out.println("El usuario " + nickname + " ha sido creado");
+							JOptionPane.showMessageDialog(null,"El usuario " + nickname + " ha sido creado");
 						}
 					}
 				} catch(NumberFormatException e) {
@@ -201,34 +207,33 @@ public class Main{
 		int minutes=0;
 		int sec=0;
 		boolean inputAccepted=false;
-		boolean inputAccepted2=false;
 		
 		if(mscManager.spaceAvailableSong()){
+			
+			JTextField User = new JTextField();
+			JTextField Title = new JTextField();
+			JTextField Artist = new JTextField();
+			JTextField releaseDay = new JTextField();
+			JTextField releaseMonth = new JTextField();
+			JTextField releaseYear = new JTextField();
+			JTextField durationHour = new JTextField();
+			JTextField durationMinutes = new JTextField();
+			JTextField durationSecs = new JTextField();
+			
+			//Create several inputs
+			Object [] fields = {
+				"User", User,
+				"Title", Title,
+				"Artist", Artist,
+				"Day of release", releaseDay,
+				"Month of release", releaseMonth,
+				"Year of release", releaseYear,
+				"Hour of duration", durationHour,
+				"Minutes of duration", durationMinutes,
+				"Seconds of duration", durationSecs
+				
+			};
 			while(!inputAccepted) {
-				
-				JTextField User = new JTextField();
-				JTextField Title = new JTextField();
-				JTextField Artist = new JTextField();
-				JTextField releaseDay = new JTextField();
-				JTextField releaseMonth = new JTextField();
-				JTextField releaseYear = new JTextField();
-				JTextField durationHour = new JTextField();
-				JTextField durationMinutes = new JTextField();
-				JTextField durationSecs = new JTextField();
-				
-				//Create several inputs
-				Object [] fields = {
-					"User", User,
-					"Title", Title,
-					"Artist", Artist,
-					"Day of release", releaseDay,
-					"Month of release", releaseMonth,
-					"Year of release", releaseYear,
-					"Hour of duration", durationHour,
-					"Minutes of duration", durationMinutes,
-					"Seconds of duration", durationSecs
-					
-				};
 				int n= JOptionPane.showConfirmDialog(null,fields,"Añadir canción al pool",JOptionPane.OK_CANCEL_OPTION);
 				
 				try{
@@ -245,13 +250,13 @@ public class Main{
 						minutes = Integer.parseInt(durationMinutes.getText());
 						sec = Integer.parseInt(durationSecs.getText());
 						
-						int[] userData = new int[2];
-						userData = mscManager.findUser(user);
+						int[] userData = mscManager.findUser(user);
+						int[] songData = mscManager.findSong(title);
 						if(userData[0]==0){
 							JOptionPane.showMessageDialog(null, "Usuario no encontrado","ERROR", JOptionPane.WARNING_MESSAGE);
 						}else if (title.equals("")) {
 							JOptionPane.showMessageDialog(null, "No puede dejar el título vacío","ERROR", JOptionPane.WARNING_MESSAGE);
-						} else if (mscManager.findSong(title)){
+						} else if (songData[0]==1){
 							JOptionPane.showMessageDialog(null, "Canción ya creada","ERROR", JOptionPane.WARNING_MESSAGE);
 						} else if(artist.equals("")){
 							JOptionPane.showMessageDialog(null, "No puede dejar el artista vacío","ERROR", JOptionPane.WARNING_MESSAGE);
@@ -277,6 +282,7 @@ public class Main{
 							int userOldNumberSongs = mscManager.getUser(userData[1]).getUploadedSongs();
 							mscManager.getUser(userData[1]).setUploadedSongs(userOldNumberSongs+1);
 							mscManager.getUser(userData[1]).setCategory(mscManager.getUser(userData[1]).defineCategory(userOldNumberSongs+1));
+							JOptionPane.showMessageDialog(null,"La canción " + title + " se ha añadido al pool de canciones");
 						}
 					}
 				} catch (NumberFormatException e){
@@ -370,16 +376,17 @@ public class Main{
 		boolean inputAccepted=false;
 		if(mscManager.spaceAvailablePlaylist()){
 			
+			JTextField userNick = new JTextField();
+			JTextField playlistName = new JTextField();
+			
+			//Create several inputs
+			Object [] fields = {
+				"Nickname del usuario autorizado", userNick,
+				"Nombre de playlist", playlistName
+			};
+			
 			while(!inputAccepted){
-				
-				JTextField userNick = new JTextField();
-				JTextField playlistName = new JTextField();
-				
-				//Create several inputs
-				Object [] fields = {
-					"Nickname del usuario autorizado", userNick,
-					"Nombre de playlist", playlistName
-				};
+			
 				int n = JOptionPane.showConfirmDialog(null,fields,"Crear una playlist restringida",JOptionPane.OK_CANCEL_OPTION);
 				
 				if(JOptionPane.CANCEL_OPTION==n){
@@ -401,7 +408,7 @@ public class Main{
 						JOptionPane.showMessageDialog(null, "Nombre no disponible, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE);
 					} else{
 						inputAccepted=true;
-						mscManager.addPrivatePlaylist(namePlaylist, userData[1]);
+						mscManager.addRestrictedPlaylist(namePlaylist, userData[1]);
 						JOptionPane.showMessageDialog(null,"La playlist " + namePlaylist + " ha sido creada. El usuario principal " + userName + " puede añadir hasta 4 usuarios autorizados desde el menú");
 					} 
 				}
@@ -427,9 +434,9 @@ public class Main{
 			"Usuario autorizado", oldUser,
 			"Usuario a añadir", addUser
 		};
-		int n = JOptionPane.showConfirmDialog(null,fields,"Añadir usuario autorizado a playlist restringida",JOptionPane.OK_CANCEL_OPTION);
 		
 		while(!inputAccepted){
+			int n = JOptionPane.showConfirmDialog(null,fields,"Añadir usuario autorizado a playlist restringida",JOptionPane.OK_CANCEL_OPTION);
 			if(JOptionPane.CANCEL_OPTION==n){
 			inputAccepted=true;
 			}else{
@@ -438,10 +445,10 @@ public class Main{
 				newUser=addUser.getText();
 
 				int[] userData = mscManager.findUser(currentUser);
-				int[] userData2 = mscManager.findUser(currentUser);
+				int[] userData2 = mscManager.findUser(newUser);
 				int[] playlistData = mscManager.findPlaylist(playlistName);
 				
-				if (playlist.equals("")) {
+				if (playlist.equals("")){
 				  JOptionPane.showMessageDialog(null, "No puede dejar el nombre de playlist vacío","ERROR", JOptionPane.WARNING_MESSAGE);
 				} else if (currentUser.equals("")){
 					JOptionPane.showMessageDialog(null, "No puede dejar el usuario autorizado vacío","ERROR", JOptionPane.WARNING_MESSAGE);
@@ -449,25 +456,158 @@ public class Main{
 					JOptionPane.showMessageDialog(null, "No puede dejar el nuevo usuario autorizado vacío","ERROR", JOptionPane.WARNING_MESSAGE);
 				} else if(playlistData[0]!=1){
 					JOptionPane.showMessageDialog(null, "La playlist no existe, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE);
-				 /*else if(!mscManager.findPlaylistType(3, playlistData[1])){
-					JOptionPane.showMessageDialog(null, "La playlist no es restringida, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE); */
+				} else if(!mscManager.findPlaylistType(3, playlistData[1])){
+					JOptionPane.showMessageDialog(null, "La playlist no es restringida, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE); 
 				} else if(userData[0]!=1){
 					JOptionPane.showMessageDialog(null, "El usuario autorizado no existe","ERROR", JOptionPane.WARNING_MESSAGE);
 				} else if(userData2[0]!=1){
 					JOptionPane.showMessageDialog(null, "El usuario a autorizar no existe","ERROR", JOptionPane.WARNING_MESSAGE);
 				} else if(!mscManager.findAuthorizedUser(currentUser, playlistData[1])){
 					JOptionPane.showMessageDialog(null, "El usuario autorizado no tiene derechos en esta playlist","ERROR", JOptionPane.WARNING_MESSAGE);
-				} else if(!mscManager.checkRepeatedUser(newUser, playlistData[1])){
+				} else if(mscManager.checkRepeatedUser(newUser, playlistData[1])){
 					JOptionPane.showMessageDialog(null, "El usuario a autorizar ya tiene derechos sobre esta playlist","ERROR", JOptionPane.WARNING_MESSAGE);
 				}else{
-					mscManager.addAuthorizedUserRestricted(playlistData[1], userData2[1]);
 					inputAccepted=true;
+					mscManager.addAuthorizedUserRestricted(playlistData[1], userData2[1]);
+					JOptionPane.showMessageDialog(null,"Permisos concedidos, ahora " + newUser + " tiene derechos sobre la playlist " + playlistName);
 				}
 			}
 		} 
 		
 	}
 
+	public void rankPublicPlaylist(){
+		String playlistName="";
+		int rank=0;
+		boolean inputAccepted=false;
+		
+		JTextField playlist = new JTextField();
+		JTextField user = new JTextField();
+		JTextField ranked = new JTextField();
+		
+		//Create several inputs
+		Object [] fields = {
+			"Nombre de la playlist", playlist,
+			"Puntuación", ranked
+		};
+		while(!inputAccepted){
+			int n = JOptionPane.showConfirmDialog(null,fields,"Calificar playlist pública",JOptionPane.OK_CANCEL_OPTION);
+			if(JOptionPane.CANCEL_OPTION==n){
+			inputAccepted=true;
+			}else{
+				playlistName=playlist.getText();
+				rank=Integer.parseInt(ranked.getText());
+				
+				int[] playlistData = mscManager.findPlaylist(playlistName);
+				
+				if (playlistName.equals("")){
+				  JOptionPane.showMessageDialog(null, "No puede dejar el nombre de playlist vacío","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if(rank<0 || rank==0){
+					JOptionPane.showMessageDialog(null, "Puntuación no válida","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if (playlistData[0]!=1){
+					JOptionPane.showMessageDialog(null, "La playlist no existe, por favor verifique","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else if (!mscManager.findPlaylistType(1, playlistData[1])){
+					JOptionPane.showMessageDialog(null, "La playlist no es pública","ERROR", JOptionPane.WARNING_MESSAGE);
+				} else {
+					inputAccepted=true;
+					mscManager.rankPlaylist(playlistData[1], rank);
+					JOptionPane.showMessageDialog(null,"La playlist ha sido puntuada, consulte la lista de playlists para ver el promedio");
+					
+				}
+			}
+		
+		}
+	}
 
+	public void addSongToPlaylist(){
+		String playlistName="";
+		String songName="";
+		boolean inputAccepted=false;
+		boolean inputAccepted2=false;
+		
+		JTextField playlist = new JTextField();
+		JTextField song = new JTextField();
+		
+		//Create several inputs
+		Object [] fields = {
+			"Nombre de la playlist", playlist,
+			"Canción a añadir", song
+		};
+		
+		while(!inputAccepted){
+			
+			int n = JOptionPane.showConfirmDialog(null,fields,"Añadir canción a playlist",JOptionPane.OK_CANCEL_OPTION);
+			String playlistSelection = (String)JOptionPane.showInputDialog(null,"Seleccione un tipo de playlist ","PLAYLISTS", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "PÚBLICA","PRIVADA", "RESTRINGIDA"},"Seleccione");
+			
+			if(playlistSelection!=null){
+				if(JOptionPane.CANCEL_OPTION==n){
+				inputAccepted=true;
+				}else{
+					
+					playlistName=playlist.getText();
+					songName=song.getText();
+					
+					int[] playlistData = mscManager.findPlaylist(playlistName);
+					int[] songData = mscManager.findSong(songName);
+					
+					
+					if (playlistName.equals("")){
+					  JOptionPane.showMessageDialog(null, "No puede dejar el nombre de playlist vacío","ERROR", JOptionPane.WARNING_MESSAGE);
+					} else if(songName.equals("")){
+						JOptionPane.showMessageDialog(null, "No puede dejar el nombre de la canción vacío","ERROR", JOptionPane.WARNING_MESSAGE);
+					} else if(playlistData[0]!=1){
+						JOptionPane.showMessageDialog(null, "La playlist no existe, por favor verifique","ERROR", JOptionPane.WARNING_MESSAGE);
+					} else if (songData[0]!=1){
+						JOptionPane.showMessageDialog(null, "La canción no existe, por favor verifique","ERROR", JOptionPane.WARNING_MESSAGE);
+					}
+					if(playlistSelection.equals("PÚBLICA")){
+						while(!inputAccepted2){
+							if(!mscManager.findPlaylistType(1, playlistData[1])){
+								JOptionPane.showMessageDialog(null, "La playlist no es pública","ERROR", JOptionPane.WARNING_MESSAGE);
+							}else {
+								inputAccepted2=true;
+							}
+						}
+					}
+					if(playlistSelection.equals("PRIVADA")){
+						while(!inputAccepted2){
+							String name = JOptionPane.showInputDialog("Digite su nombre de usuario");
+							if(name!=null){
+								if(!mscManager.findPlaylistType(2, playlistData[1])){
+									JOptionPane.showMessageDialog(null, "La playlist no es privada","ERROR", JOptionPane.WARNING_MESSAGE);
+								}else if(!mscManager.checkOwner(name, playlistData[1])){
+									JOptionPane.showMessageDialog(null, "No es un usuario autorizado","ERROR", JOptionPane.WARNING_MESSAGE);
+								}else {
+									inputAccepted2=true;
+								}
+							} 
+						}
+					}
+					if(playlistSelection.equals("RESTRINGIDA")){
+						while(!inputAccepted2){
+							String name = JOptionPane.showInputDialog("Digite su nombre de usuario");
+							if(!mscManager.findPlaylistType(3, playlistData[1])){
+								JOptionPane.showMessageDialog(null, "La playlist no es restringida","ERROR", JOptionPane.WARNING_MESSAGE);
+							}else if(!mscManager.findAuthorizedUser(name, playlistData[1])){
+								JOptionPane.showMessageDialog(null, "No es un usuario autorizado","ERROR", JOptionPane.WARNING_MESSAGE);
+							}else{
+								inputAccepted2=true;
+							}
+						}
+					}
+					if(inputAccepted2){
+						
+						inputAccepted=true;
+						mscManager.addSongToPlaylist(songData[1], playlistData[1]);
+						JOptionPane.showMessageDialog(null,"La canción se añadió exitosamente");
+						
+					}
+				}
+			}else{
+				inputAccepted=true;
+			}
+		}
+		
+	}
 
 }

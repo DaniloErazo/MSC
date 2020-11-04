@@ -7,7 +7,7 @@ public class RestrictedPlaylist extends Playlist{
 	
 	public RestrictedPlaylist(String name, User authorizedUser){
 		super(name);
-		this.authorizedUsers = new User[MAX_AUSERS];
+		authorizedUsers = new User[MAX_AUSERS];
 		authorizedUsers[0]=authorizedUser;
 		this.numberUsers=1;
 	}
@@ -32,13 +32,16 @@ public class RestrictedPlaylist extends Playlist{
 				emptyFound=true;
 			}
 		}
+		
 	}
 	
 	public boolean repeatedAuthorizedUser(String nickname){
 		boolean repeated=false;
 		for(int i=0; i<MAX_AUSERS & !repeated; i++){
-			if(authorizedUsers[i].getNickname().equals(nickname)){
-				repeated=true;
+			if(authorizedUsers[i]!=null){
+				if(authorizedUsers[i].getNickname().equals(nickname)){
+					repeated=true;
+				}
 			}
 		}
 		return repeated;
@@ -47,8 +50,12 @@ public class RestrictedPlaylist extends Playlist{
 	public boolean findAuthorizedUser(String nickname){
 		boolean found= false;
 		for(int i=0; i<MAX_AUSERS & !found; i++){
-			if(authorizedUsers[i].getNickname()== nickname){
-				found=true;
+			if(authorizedUsers[i]!=null){
+				
+				if(authorizedUsers[i].getNickname().equals(nickname)){
+					found=true;
+				}
+				
 			}
 		}
 		return found;
@@ -60,15 +67,17 @@ public class RestrictedPlaylist extends Playlist{
 	
 	@Override 
 	public String infoPlaylist(){
-		String infoPlaylist= super.toString() +
-		"**  Authorized user: " + getAllUsersNames() + "\n"+
+		String infoPlaylist= super.infoPlaylist() +
+		"**  Authorized user: " + getAllUsersNames() + "\n" +
 		"***********************************\n";
 		return infoPlaylist;
 	}
 	public String getAllUsersNames(){
 		String allNames="";
-		for(int i=0; i<(numberUsers-1); i++){
-			allNames+= authorizedUsers[i].getNickname() + ", ";
+		for(int i=0; i<MAX_AUSERS; i++){
+			if(authorizedUsers[i]!=null){
+				allNames+= authorizedUsers[i].getNickname() + ", ";
+			}
 		}
 		return allNames;
 	}

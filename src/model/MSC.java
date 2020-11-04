@@ -153,14 +153,22 @@ public class MSC{
 	}
 	public boolean checkRepeatedUser(String nickname, int position){
 		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[position];
-		boolean repeated = auxiliar.repeatedAuthorizedUser(nickname);
+		boolean repeated = false;
+		repeated= auxiliar.repeatedAuthorizedUser(nickname);
 		return repeated;
 	}
 	public boolean findAuthorizedUser(String nickname, int position){
 		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[position];
-		boolean found = auxiliar.findAuthorizedUser(nickname);
+		boolean found = false;
+		found= auxiliar.findAuthorizedUser(nickname);
 		
 		return found;
+	}
+	public boolean checkOwner(String nickname, int position){
+		PrivatePlaylist auxiliar = (PrivatePlaylist)playlists[position];
+		boolean owner=false;
+		owner= auxiliar.checkOwner(nickname);
+		return owner;
 	}
 	/**
 	 * showUsers method that returns the information of all the users in the MSC <br>
@@ -199,9 +207,10 @@ public class MSC{
 	}
 	
 	/**
-	 * findUser is a method that informs if an user's nickname already exists 
+	 * findUser is a method that informs if an user's nickname already exists and in which index is located
 	 * @param nickname is the nickname to look for 
-	 * @return found if it exists, it's true and if it doesn't it's false  //!!!!!
+	 * @return userFoundData it's an array, in its first position it's either 1 or 0. 1 for found, 0 for not found
+	 * and in it's second position it's the index where the user is found, by default is 0
 	 */
 	public int[] findUser(String nickname) { 
 		int[] userFoundData = new int[2];
@@ -223,17 +232,28 @@ public class MSC{
 	 * @param title is the song to look for 
 	 * @return found if it exists, it's true and if it doesn't it's false 
 	 */
-	public boolean findSong(String title) { 
-		boolean found=false;
-		for (int i=0; i<MAX_SONGS && !found; i++){
+	public int[] findSong(String title) { 
+		int[] songFoundData = new int[2];
+		int found=0;
+		int index=0;
+		for (int i=0; i<MAX_SONGS && found!=1; i++){
 			Song songAux= songs[i];
 			if(songAux!=null && songAux.getTitle().equals(title)){
-				found=true;
+				found=1;
+				index=i;
 			}
 		}
-		return found;
+		songFoundData[0]=found;
+		songFoundData[1]=index;
+		return songFoundData;
 	}
 	
+	/**
+	 * findPlaylist is a method that informs if a playlist already exists and in which index is located
+	 * @param name is the playlist's name to look for 
+	 * @return playlistFoundData it's an array, in its first position it's either 1 or 0. 1 for found, 0 for not found
+	 * and in it's second position it's the index where the user is found, by default is 0
+	 */
 	public int[] findPlaylist(String name) { 
 		int[] playlistFoundData = new int[2];
 		int found=0;
@@ -253,7 +273,7 @@ public class MSC{
 	public boolean findPlaylistType(int type, int position){
 		boolean typeFound=false;
 		
-		/*if(type==1){
+		if(type==1){
 			if(playlists[position] instanceof PublicPlaylist){
 				typeFound=true;
 			}
@@ -266,9 +286,21 @@ public class MSC{
 				typeFound=true;
 			}
 		}
-		*/
 		
-		return (playlists[position] instanceof RestrictedPlaylist);
+		
+		return typeFound;
+	}
+	
+	public void rankPlaylist(int playlistIndex, int rank){
+		PublicPlaylist auxiliar = (PublicPlaylist)playlists[playlistIndex];
+		auxiliar.rankPlaylist(rank);
+		double newAverage= auxiliar.calculateAverage();
+		auxiliar.setAverageRank(newAverage);
+		
+	}
+	
+	public void addSongToPlaylist(int songIndex, int playlistIndex){
+		playlists[playlistIndex].addSong(songs[songIndex], playlists[playlistIndex].getGenre());
 	}
 	
 	/**
@@ -293,7 +325,7 @@ public class MSC{
 		String playlistsInfo="";
 		for (int i=0; i<MAX_PLAYLIST; i++){
 			if(playlists[i]!=null){
-				playlistsInfo+= playlists[i].toString();
+				playlistsInfo+= playlists[i].infoPlaylist();
 			}
 		}
 		return playlistsInfo;

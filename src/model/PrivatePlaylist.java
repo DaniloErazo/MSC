@@ -11,9 +11,18 @@ public class PrivatePlaylist extends Playlist{
 	public User getAuthorizedUser(){
 		return authorizedUser;
 	}
+	
+	public boolean checkOwner(String nickname){
+		boolean owner=false;
+		if(nickname.equals(authorizedUser.getNickname())){
+			owner=true;
+		}
+		return owner;
+	}
+	
 	@Override 
 	public String infoPlaylist(){
-		String infoPlaylist= super.toString() +
+		String infoPlaylist= super.infoPlaylist() +
 		"**  Authorized user: " + authorizedUser.getNickname() + "\n"+
 		"***********************************\n";
 		return infoPlaylist;
