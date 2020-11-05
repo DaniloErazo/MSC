@@ -182,12 +182,12 @@ public class MSC{
 	
 	/**
 	 * Method that adds a new authorized user to a restricted playlist  <br>
-	 * <b> pre: </b> playlists array and users are initialized. The playlist and the user exist. The new user  isn't an authorized user yet <br>  
+	 * <b> pre: </b> playlists array and users are initialized. The playlist and the user exist. 
+	 * The new user isn't an authorized user yet. There's space for new authorized users <br>  
 	 * <b> pos: </b> <br>
 	 * @param playlistPosition is the position in the playlists array where the given playlist is. playlistPosition &ge; 0 <br>
 	 * @param userIndex is the position in the array users where the new authorized user is. userIndex &gt; 0  
 	 */
-	 //AÑADIR VALIDACIÓN DE ESPACIO SUFICIENTEEEEEEEEE
 	public void addAuthorizedUserRestricted(int playlistPosition, int userIndex){
 		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[playlistPosition];
 		User newUser = users[userIndex];
@@ -208,6 +208,33 @@ public class MSC{
 		boolean found = false;
 		found= auxiliar.findAuthorizedUser(nickname);
 		
+		return found;
+	}
+	
+	/**
+	 * Method that checks if a restricted playlist has space for new authorized users <br>
+	 * <b> pre: </b> playlists array is initialized. The playlist exist. The playlist is indeed restricted <br>  
+	 * <b> pos: </b> <br>
+	 * @param playlistIndex is the position in the playlists array where the playlist is. playlistIndex &ge;0 <br>
+	 * @return available which is true if there's space, false otherwise
+	 */
+	public boolean availableAuthorizedUsers(int playlistIndex){
+		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[playlistIndex];
+		boolean available = auxiliar.availableSpace();
+		return available;
+	}
+	
+	
+	/**
+	 * Method that checks if a song already exists in a playlist <br>
+	 * <b> pre: </b> playlists array is initialized. The playlist and the song exist <br>  
+	 * <b> pos: </b> <br>
+	 * @param  playlistIndex is the position in the playlists array where the playlist is. playlistIndex &ge;0 <br>
+	 * @param songName is the name of the song to be checked. songName!=null. songName!="" <br>
+	 * @return found which is true if the song is in the playlist, otherwise it's false
+	 */
+	public boolean checkSong(int playlistIndex, String songName){
+		boolean found = playlists[playlistIndex].checkSong(songName);
 		return found;
 	}
 	
@@ -356,7 +383,6 @@ public class MSC{
 	 * @param songIndex is the position in the songs array where the song to be added is. songIndex&ge;0
 	 * @param playlistIndex is the position in the playlists array where the playlist is. playlistIndex&ge;0 
 	 */
-	 //AÑADIR VALIDACIÓN DE CANCIÓN NO REPETIDAAAAAAAA
 	public void addSongToPlaylist(int songIndex, int playlistIndex){
 		playlists[playlistIndex].addSong(songs[songIndex], playlists[playlistIndex].getGenre());
 	}

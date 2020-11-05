@@ -495,7 +495,9 @@ public class Main{
 					JOptionPane.showMessageDialog(null, "La playlist no existe, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE);
 				} else if(!mscManager.findPlaylistType(3, playlistData[1])){
 					JOptionPane.showMessageDialog(null, "La playlist no es restringida, intente de nuevo","ERROR", JOptionPane.WARNING_MESSAGE); 
-				} else if(userData[0]!=1){
+				} else if(!mscManager.availableAuthorizedUsers(playlistData[1])){
+					JOptionPane.showMessageDialog(null, "La playlist alcanzó el máximo de usuarios autorizados","ERROR", JOptionPane.WARNING_MESSAGE);
+				}else if(userData[0]!=1){
 					JOptionPane.showMessageDialog(null, "El usuario autorizado no existe","ERROR", JOptionPane.WARNING_MESSAGE);
 				} else if(userData2[0]!=1){
 					JOptionPane.showMessageDialog(null, "El usuario a autorizar no existe","ERROR", JOptionPane.WARNING_MESSAGE);
@@ -579,7 +581,7 @@ public class Main{
 			"Canción a añadir", song
 		};
 		
-		while(!inputAccepted){
+		while(!inputAccepted || !inputAccepted2){
 			
 			int n = JOptionPane.showConfirmDialog(null,fields,"Añadir canción a playlist",JOptionPane.OK_CANCEL_OPTION);
 			String playlistSelection = (String)JOptionPane.showInputDialog(null,"Seleccione un tipo de playlist ","PLAYLISTS", JOptionPane.QUESTION_MESSAGE, null, new Object[] { "PÚBLICA","PRIVADA", "RESTRINGIDA"},"Seleccione");
@@ -604,15 +606,19 @@ public class Main{
 						JOptionPane.showMessageDialog(null, "La playlist no existe, por favor verifique","ERROR", JOptionPane.WARNING_MESSAGE);
 					} else if (songData[0]!=1){
 						JOptionPane.showMessageDialog(null, "La canción no existe, por favor verifique","ERROR", JOptionPane.WARNING_MESSAGE);
+					} else if (mscManager.checkSong(playlistData[1], songName)){
+						JOptionPane.showMessageDialog(null, "La canción ya existe en la playlist","ERROR", JOptionPane.WARNING_MESSAGE);
+					} else {
+						inputAccepted=true;
 					}
 					if(playlistSelection.equals("PÚBLICA")){
-						while(!inputAccepted2){
-							if(!mscManager.findPlaylistType(1, playlistData[1])){
-								JOptionPane.showMessageDialog(null, "La playlist no es pública","ERROR", JOptionPane.WARNING_MESSAGE);
-							}else {
-								inputAccepted2=true;
-							}
+						
+						if(!mscManager.findPlaylistType(1, playlistData[1])){
+							JOptionPane.showMessageDialog(null, "La playlist no es pública","ERROR", JOptionPane.WARNING_MESSAGE);
+						}else {
+							inputAccepted2=true;
 						}
+						
 					}
 					if(playlistSelection.equals("PRIVADA")){
 						while(!inputAccepted2){
@@ -640,9 +646,8 @@ public class Main{
 							}
 						}
 					}
-					if(inputAccepted2){
+					if(inputAccepted2 && inputAccepted){
 						
-						inputAccepted=true;
 						mscManager.addSongToPlaylist(songData[1], playlistData[1]);
 						JOptionPane.showMessageDialog(null,"La canción se añadió exitosamente");
 						

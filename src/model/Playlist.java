@@ -55,7 +55,7 @@ public class Playlist{
 	
 	/**
 	 * addSong is a method that adds a song to the playlist. It updates the genre and the duration of the playlist <br>
-	 * <b> pre: </b> songs array is initialized. There is free indexes in the array<br>  
+	 * <b> pre: </b> songsInPlaylist array is initialized. There is free indexes in the array<br>  
 	 * <b> pos: </b> song++. There's a new object in the songs array in the first empty found position. genre and durationP are updated <br>
 	 * @param newSong is the song to be added
 	 * @param genre is the playlist genre before adding the new song. genre!=null. genre!=""  
@@ -90,7 +90,7 @@ public class Playlist{
 	
 	/**
 	 * updateGenre is a method that updates the genre of the playlist if it's needed <br>
-	 * <b> pre: </b> <br>  
+	 * <b> pre: </b> songsInPlaylist array is initialized<br>  
 	 * <b> pos: </b> genre is updated<br>
 	 * @param genre is the genre before updating
 	 * @return genre is a String with a new genre added if needed  
@@ -106,6 +106,25 @@ public class Playlist{
 			}
 		}
 		return genre;
+	}
+	
+	/**
+	 * checkSong is a method that checks if a song is already added to the playlist <br>
+	 * <b> pre: </b> songsInPlaylist array is initialized<br>  
+	 * <b> pos: </b> <br>
+	 * @param title is the song name to be consulted. title!=null. title!="" 
+	 * @return found true if it's already added, otherwise false   
+	 */
+	public boolean checkSong(String title){
+		boolean found=false;
+		for(int i=0; i<songsInPlaylist.length; i++){
+			if(songsInPlaylist[i]!=null){
+				if(songsInPlaylist[i].getTitle().equals(title)){
+					found=true;
+				}
+			}
+		}
+		return found;
 	}
 	
 	/**
