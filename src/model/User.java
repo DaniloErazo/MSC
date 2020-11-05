@@ -10,7 +10,7 @@ public class User{
 	
 	/**
 	 * Constructor for a user with all its information <br>
-	 * Qparam nickname is a identifier for the user <br>
+	 * @param nickname is a identifier for the user <br>
 	 * @param password <br>
 	 * @param age the user's age <br>
 	 * @param uploadedSongs is the quantity of songs uploaded to the pool <br>
@@ -57,7 +57,7 @@ public class User{
 	* according to the quantity of uploaded songs <br>
 	* <b> pre: </b> <br>
 	* <b> pro: </b> category updates if it changed <br>
-	* @param uploadedSongs is the quantity of uploaded songs by the user. uploadedSongs>0 <br>
+	* @param uploadedSongs is the quantity of uploaded songs by the user. uploadedSongs &gt; 0 <br>
 	* @return categoryUpdate it's the new category in case it's changed 
 	*/
 	public Category defineCategory(int uploadedSongs){

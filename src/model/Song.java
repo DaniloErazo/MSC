@@ -10,7 +10,7 @@ public class Song{
 	
 	/**
 	 * Constructor for a song with all its information
-	 * Qparam title is the name of the song
+	 * @param title is the name of the song
 	 * @param artist is the singer or band that sings the song
 	 * @param releaseDate is the date when the song was released to the public
 	 * @param duration duration of the song in HH:MM:SS
@@ -31,16 +31,24 @@ public class Song{
 		return title;
 	}
 	
+	/**
+	 * Returns the duration of the song 
+	 * @return duration  
+	*/
 	public Duration getDuration(){
 		return duration;
 	}
 	
+	/**
+	 * Returns the genre of the song
+	 * @return genre 
+	*/
 	public Genre getGenre(){
 		return genre;
 	}
 	
 	/**
-	 * Method that produces a String with the some of the information of a song 
+	 * Method that produces a String with some of the song information 
 	 */
 	public String toString(){
 		String infoSong= "*************  Song **************\n"+

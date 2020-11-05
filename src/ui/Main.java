@@ -27,6 +27,12 @@ public class Main{
 		mscManager = new MSC();
 	}
 	
+	
+	/**
+	 * showMenu is a method that shows the main menu for the application
+	 * with the main functions
+	 * @return option which is the option selected by the user 
+	 */
 	public int showMenu() {
 		int option=0;
 
@@ -46,6 +52,10 @@ public class Main{
 		return option;
 	}
 	
+	/**
+	 * executeOperation is a method that executes the function according to the main menu
+	 *@param operation is the function chosen by the user in the main menu  
+	 */
 	public void executeOperation(int operation) {
 		
 		switch(operation) {
@@ -80,6 +90,11 @@ public class Main{
 		
 		}
 	}
+	
+	
+	/**
+	 * playlistMenu is a method that shows the menu of functions for the playlists and executes the chosen one
+	 */
 	private void playlistMenu() {
 		int option2=0;
 		System.out.println(
@@ -109,6 +124,11 @@ public class Main{
 		}
 	}
 	
+	
+	/**
+	 * restrictedPlaylistMenu is a method that shows the menu of functions for a restricted playlist
+	 * and executes the chosen one
+	 */
 	private void restrictedPlaylistMenu() {
 		int option3=0;
 		System.out.println(
@@ -134,7 +154,7 @@ public class Main{
 	
 	/**
 	 * createUser is a method that asks for the necessary information to add a new user, 
-	 * it also validates the information provided 
+	 * it validates space available to save it and accurate inputs 
 	 */
 	public void createUser(){
 		String nickname="";
@@ -191,7 +211,7 @@ public class Main{
 	
 	/**
 	 * createSong is a method that asks for the necessary information to add a new song, 
-	 * it also validates the information provided 
+	 * it validates space available to save it and accurate inputs 
 	 */
 	public void createSong(){
 		String user="";
@@ -295,6 +315,11 @@ public class Main{
 		
 	}
 	
+	
+	/**
+	 * createPublicPlaylist is a method that asks for the necessary information to create a public playlist, 
+	 * it validates space available to save it and accurate inputs 
+	 */
 	public void createPublicPlaylist(){
 		String playlistName= "";
 		boolean inputAccepted=false;
@@ -325,6 +350,10 @@ public class Main{
 		} 
 	}
 	
+	/**
+	 * createPrivatePlaylist is a method that asks for the necessary information to create a private playlist, 
+	 * it validates space available to save it, accurate inputs and the existence of the authorized user  
+	 */
 	public void createPrivatePlaylist(){
 		String userName;
 		String namePlaylist;
@@ -370,6 +399,10 @@ public class Main{
 		} 
 	}
 
+	/**
+	 * createPrivatePlaylist is a method that asks for the necessary information to create a restricted playlist, 
+	 * it validates space available to save it, accurate inputs and the existence of the main authorized user  
+	 */
 	public void createRestrictedPlaylist(){
 		String userName;
 		String namePlaylist;
@@ -418,6 +451,10 @@ public class Main{
 		}
 	}
 
+	/**
+	 * addAuthorizedUser is a method that asks for the necessary information to add a new authorized user 
+	 * to a restricted playlist. It validates accurate inputs and the existence of the authorized user and the playlist  
+	 */
 	public void addAuthorizedUser(){
 		String currentUser="";
 		String newUser="";
@@ -464,7 +501,7 @@ public class Main{
 					JOptionPane.showMessageDialog(null, "El usuario a autorizar no existe","ERROR", JOptionPane.WARNING_MESSAGE);
 				} else if(!mscManager.findAuthorizedUser(currentUser, playlistData[1])){
 					JOptionPane.showMessageDialog(null, "El usuario autorizado no tiene derechos en esta playlist","ERROR", JOptionPane.WARNING_MESSAGE);
-				} else if(mscManager.checkRepeatedUser(newUser, playlistData[1])){
+				} else if(mscManager.findAuthorizedUser(newUser, playlistData[1])){
 					JOptionPane.showMessageDialog(null, "El usuario a autorizar ya tiene derechos sobre esta playlist","ERROR", JOptionPane.WARNING_MESSAGE);
 				}else{
 					inputAccepted=true;
@@ -476,6 +513,10 @@ public class Main{
 		
 	}
 
+	/**
+	 * rankPublicPlaylist is a method that asks for the necessary information to rank a public playlist 
+	 * It validates accurate inputs and the existence of the playlist  
+	 */
 	public void rankPublicPlaylist(){
 		String playlistName="";
 		int rank=0;
@@ -519,6 +560,10 @@ public class Main{
 		}
 	}
 
+	/**
+	 * addSongToPlaylist is a method that asks for the necessary information to add an existent song to  
+	 * a playlist. It works for the three types of playlist. It validates information according to the type   
+	 */
 	public void addSongToPlaylist(){
 		String playlistName="";
 		String songName="";

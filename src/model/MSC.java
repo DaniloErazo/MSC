@@ -29,6 +29,7 @@ public class MSC{
 	
 	/**
 	 * Method that checks if there's space for more users
+	 * @return true if there's space, otherwise false
 	 */
 	public boolean spaceAvailableUser(){
 		return numUsers<MAX_USERS;
@@ -36,6 +37,7 @@ public class MSC{
 	
 	/**
 	 * Method that checks if there's space for more songs
+	 * @return true if there's space, otherwise false
 	 */
 	public boolean spaceAvailableSong(){
 		return numUsers<MAX_SONGS;
@@ -43,15 +45,26 @@ public class MSC{
 	
 	/**
 	 * Method that checks if there's space for more playlists
+	 * @return true if there's space, otherwise false
 	 */
 	public boolean spaceAvailablePlaylist(){
 		return numUsers<MAX_PLAYLIST;
 	}
 	
+	/**
+	 * Method that returns a specific playlist of the playlists array
+	 * @param index it's the position where the asked playlist is 
+	 * @return playlists[index] the playlist in the given position 
+	 */
 	public Playlist getPlaylist(int index){
 		return playlists[index];
 	}
 	
+	/**
+	 * Method that returns a specific user of the array users
+	 * @param index index it's the position where the asked user is 
+	 * @return users[index] the user in the given position 
+	 */
 	public User getUser(int index){
 		return users[index];
 	}
@@ -62,7 +75,7 @@ public class MSC{
 	 * <b> pos: </b> numUsers++, users has a new object in the first empty index found <br>
 	 * @param nickname is the identifier for the user. nickname !=null . nickname!= "" <br>
 	 * @param password user's password. password != null. password != "" <br>
-	 * @param age the user's age. age>0 <br>
+	 * @param age the user's age. age&gt;0 <br>
 	 * @param uploadedSongs is the quantity of songs uploaded to the pool, by default it starts in 0<br>
 	 */
 	public void addUser(String nickname, String password, int age, int uploadedSongs){
@@ -108,6 +121,12 @@ public class MSC{
 		numSongs++;
 	}
 	
+	/**
+	 * Method that adds a public playlist  <br>
+	 * <b> pre: </b> playlists array is initialized. There isn't another playlist with the same name. There are empty indexes <br>  
+	 * <b> pos: </b> numPlaylists++, playlists has a new object of PublicPlaylist type in the first empty index found <br>
+	 * @param name is the name of the playlist. title !=null . title!= "" <br>
+	 */
 	public void addPublicPlaylist(String name){
 		int emptyIndex=0; 
 		boolean emptyFound=false;
@@ -118,8 +137,16 @@ public class MSC{
 			}
 		}
 		playlists[emptyIndex] = new PublicPlaylist(name);
+		numPlaylists++;
 	}
 	
+	/**
+	 * Method that adds a private playlist  <br>
+	 * <b> pre: </b> playlists array is initialized. There isn't another playlist with the same name. There are empty indexes <br>  
+	 * <b> pos: </b> numPlaylists++, playlists has a new object of PrivatePlaylist type in the first empty index found <br>
+	 * @param name is the name of the playlist. title !=null . title!= "" <br>
+	 * @param userIndex is the position in the array users where the authorized user is. userIndex &ge; 0 
+	 */
 	public void addPrivatePlaylist(String name, int userIndex){
 		int emptyIndex=0; 
 		boolean emptyFound=false;
@@ -133,6 +160,13 @@ public class MSC{
 		playlists[emptyIndex] = new PrivatePlaylist(name, userOwner);
 	}
 	
+	/**
+	 * Method that adds a restricted playlist  <br>
+	 * <b> pre: </b> playlists array is initialized. There isn't another playlist with the same name. There are empty indexes <br>  
+	 * <b> pos: </b> numPlaylists++, playlists has a new object of PrivatePlaylist type in the first empty index found <br>
+	 * @param name is the name of the playlist. title !=null . title!= "" <br>
+	 * @param userIndex is the position in the array users where the main authorized user is . userIndex &ge; 0
+	 */
 	public void addRestrictedPlaylist(String name, int userIndex){
 		int emptyIndex=0; 
 		boolean emptyFound=false;
@@ -145,18 +179,30 @@ public class MSC{
 		}
 		playlists[emptyIndex] = new RestrictedPlaylist(name, userOwner);
 	}
+	
+	/**
+	 * Method that adds a new authorized user to a restricted playlist  <br>
+	 * <b> pre: </b> playlists array and users are initialized. The playlist and the user exist. The new user  isn't an authorized user yet <br>  
+	 * <b> pos: </b> <br>
+	 * @param playlistPosition is the position in the playlists array where the given playlist is. playlistPosition &ge; 0 <br>
+	 * @param userIndex is the position in the array users where the new authorized user is. userIndex &gt; 0  
+	 */
+	 //AÑADIR VALIDACIÓN DE ESPACIO SUFICIENTEEEEEEEEE
 	public void addAuthorizedUserRestricted(int playlistPosition, int userIndex){
 		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[playlistPosition];
 		User newUser = users[userIndex];
 		auxiliar.addAuthorizedUser(newUser);
 		
 	}
-	public boolean checkRepeatedUser(String nickname, int position){
-		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[position];
-		boolean repeated = false;
-		repeated= auxiliar.repeatedAuthorizedUser(nickname);
-		return repeated;
-	}
+	
+	/**
+	 * Method that checks if the given user is an authorized user in a restricted playlist  <br>
+	 * <b> pre: </b> playlists array is initialized. The playlist and the user exist. The playlist is indeed restricted <br>  
+	 * <b> pos: </b> <br>
+	 * @param nickname is user's nickname to check existence. nickname!=null. nickname!="" <br>
+	 * @param position is the position in the playlists array where the playlist to be consulted is. userIndex &gt; 0
+	 * @return found which is true if the user is one of the authorized users and false if it isn't
+	 */
 	public boolean findAuthorizedUser(String nickname, int position){
 		RestrictedPlaylist auxiliar = (RestrictedPlaylist)playlists[position];
 		boolean found = false;
@@ -164,6 +210,15 @@ public class MSC{
 		
 		return found;
 	}
+	
+	/**
+	 * Method that checks if the given user is the authorized user of a private playlist <br>
+	 * <b> pre: </b> playlists array is initialized. The playlist and the user exist. The playlist is indeed private <br>  
+	 * <b> pos: </b> <br>
+	 * @param nickname is user's nickname to check. nickname!=null. nickname!="" <br>
+	 * @param position is the position in the playlists array where the playlist to be consulted is. userIndex &gt; 0  
+	 * @return owner which is true if the user is the owner and false if it isn't
+	 */
 	public boolean checkOwner(String nickname, int position){
 		PrivatePlaylist auxiliar = (PrivatePlaylist)playlists[position];
 		boolean owner=false;
@@ -183,28 +238,7 @@ public class MSC{
 		}
 		return usersListInfo;
 	}
-	/**
-	 * Method that adds a new song <br>
-	 * <b> pre: </b> array songs is initialized. There isn't another song with the same title. There are empty indexes <br> 
-	 * <b> pos: </b> numSongs++, songs has a new object in the first empty index found <br>
-	 * @param title is the name of the song. title !=null . title!= "" <br>
-	 * @param artist the singer or band that performs the song. artist != null. artist != "" <br>
-	 * @param releaseDate the date when the song was published <br>
-	 * @param duration <br>
-	 * @param genre <br>
-	 */
-	public void addSong(String title, String artist, String releaseDate, Duration duration, Genre genre){
-		int emptyIndex=0; 
-		boolean emptyFound=false;
-		for (int i=0; i<songs.length && !emptyFound ; i++){
-			if(songs[i]==null){
-				emptyIndex=i;
-				emptyFound=true;
-			}
-		}
-		songs[emptyIndex]= new Song(title, artist, releaseDate, duration, genre);
-		numUsers++;
-	}
+	
 	
 	/**
 	 * findUser is a method that informs if an user's nickname already exists and in which index is located
@@ -230,7 +264,8 @@ public class MSC{
 	/**
 	 * findSong is a method that informs if a song's title already exists 
 	 * @param title is the song to look for 
-	 * @return found if it exists, it's true and if it doesn't it's false 
+	 * @return songFoundData it's an array, in its first position it's either 1 or 0. 1 for found, 0 for not found
+	 * and in it's second position it's the index where the song is found, by default is 0
 	 */
 	public int[] findSong(String title) { 
 		int[] songFoundData = new int[2];
@@ -252,7 +287,7 @@ public class MSC{
 	 * findPlaylist is a method that informs if a playlist already exists and in which index is located
 	 * @param name is the playlist's name to look for 
 	 * @return playlistFoundData it's an array, in its first position it's either 1 or 0. 1 for found, 0 for not found
-	 * and in it's second position it's the index where the user is found, by default is 0
+	 * and in it's second position it's the index where the playlist is found, by default is 0
 	 */
 	public int[] findPlaylist(String name) { 
 		int[] playlistFoundData = new int[2];
@@ -270,6 +305,14 @@ public class MSC{
 		return playlistFoundData;
 	}
 	
+	/**
+	 * findPlaylistType is a method that checks if the given playlist belongs to the given type  <br>
+	 * <b> pre: </b> playlists array is initialized. The playlist is already created <br>  
+	 * <b> pos: </b> <br>
+	 * @param type is the type to be consulted, it's either 1, 2 or 3. 1 for public. 2 for private and 3 for restricted. type &gt; 0 <br>
+	 * @param position is the position in the playlists array where the playlist to be consulted is. userIndex &gt; 0  
+	 * @return typeFound if the playlist belongs to the given type it's true, otherwise is false 
+	 */
 	public boolean findPlaylistType(int type, int position){
 		boolean typeFound=false;
 		
@@ -291,6 +334,13 @@ public class MSC{
 		return typeFound;
 	}
 	
+	/**
+	 * rankPlaylist is a method that gives a public playlist a score <br>
+	 * <b> pre: </b> playlists array is initialized. The playlist is already created. The playlist is indeed public <br>  
+	 * <b> pos: </b> <br>
+	 * @param playlistIndex is the position in the playlists array where the playlist is. playlistIndex &ge;0 
+	 * @param rank is the given score. Integer from 1 to 5. rank &gt; 0 <br> 
+	 */
 	public void rankPlaylist(int playlistIndex, int rank){
 		PublicPlaylist auxiliar = (PublicPlaylist)playlists[playlistIndex];
 		auxiliar.rankPlaylist(rank);
@@ -299,6 +349,14 @@ public class MSC{
 		
 	}
 	
+	/**
+	 * addSongToPlaylist is a method that adds a song to a playlist  <br>;
+	 * <b> pre: </b> playlists and songs array are initialized. The playlist and the song are already created. The song isn't already in the playlist <br>  
+	 * <b> pos: </b> <br>
+	 * @param songIndex is the position in the songs array where the song to be added is. songIndex&ge;0
+	 * @param playlistIndex is the position in the playlists array where the playlist is. playlistIndex&ge;0 
+	 */
+	 //AÑADIR VALIDACIÓN DE CANCIÓN NO REPETIDAAAAAAAA
 	public void addSongToPlaylist(int songIndex, int playlistIndex){
 		playlists[playlistIndex].addSong(songs[songIndex], playlists[playlistIndex].getGenre());
 	}
