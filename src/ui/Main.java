@@ -60,7 +60,7 @@ public class Main{
 		
 		switch(operation) {
 		case 0:
-			System.out.println("Bye!");
+			System.out.println("Gracias por usar MSC!");
 			break;
 		case 1:
 			createUser() ;
@@ -534,31 +534,34 @@ public class Main{
 			"Puntuación", ranked
 		};
 		while(!inputAccepted){
-			int n = JOptionPane.showConfirmDialog(null,fields,"Calificar playlist pública",JOptionPane.OK_CANCEL_OPTION);
-			if(JOptionPane.CANCEL_OPTION==n){
-			inputAccepted=true;
-			}else{
-				playlistName=playlist.getText();
-				rank=Integer.parseInt(ranked.getText());
-				
-				int[] playlistData = mscManager.findPlaylist(playlistName);
-				
-				if (playlistName.equals("")){
-				  JOptionPane.showMessageDialog(null, "No puede dejar el nombre de playlist vacío","ERROR", JOptionPane.WARNING_MESSAGE);
-				} else if(rank<0 || rank==0){
-					JOptionPane.showMessageDialog(null, "Puntuación no válida","ERROR", JOptionPane.WARNING_MESSAGE);
-				} else if (playlistData[0]!=1){
-					JOptionPane.showMessageDialog(null, "La playlist no existe, por favor verifique","ERROR", JOptionPane.WARNING_MESSAGE);
-				} else if (!mscManager.findPlaylistType(1, playlistData[1])){
-					JOptionPane.showMessageDialog(null, "La playlist no es pública","ERROR", JOptionPane.WARNING_MESSAGE);
-				} else {
-					inputAccepted=true;
-					mscManager.rankPlaylist(playlistData[1], rank);
-					JOptionPane.showMessageDialog(null,"La playlist ha sido puntuada, consulte la lista de playlists para ver el promedio");
+			try{
+				int n = JOptionPane.showConfirmDialog(null,fields,"Calificar playlist pública",JOptionPane.OK_CANCEL_OPTION);
+				if(JOptionPane.CANCEL_OPTION==n){
+				inputAccepted=true;
+				}else{
+					playlistName=playlist.getText();
+					rank=Integer.parseInt(ranked.getText());
 					
+					int[] playlistData = mscManager.findPlaylist(playlistName);
+					
+					if (playlistName.equals("")){
+					  JOptionPane.showMessageDialog(null, "No puede dejar el nombre de playlist vacío","ERROR", JOptionPane.WARNING_MESSAGE);
+					} else if((rank<0 || rank==0) || (rank!=1 && rank!=2 && rank!=3 && rank!=4 && rank!=5 )){
+						JOptionPane.showMessageDialog(null, "Puntuación no válida","ERROR", JOptionPane.WARNING_MESSAGE);
+					} else if (playlistData[0]!=1){
+						JOptionPane.showMessageDialog(null, "La playlist no existe, por favor verifique","ERROR", JOptionPane.WARNING_MESSAGE);
+					} else if (!mscManager.findPlaylistType(1, playlistData[1])){
+						JOptionPane.showMessageDialog(null, "La playlist no es pública","ERROR", JOptionPane.WARNING_MESSAGE);
+					} else {
+						inputAccepted=true;
+						mscManager.rankPlaylist(playlistData[1], rank);
+						JOptionPane.showMessageDialog(null,"La playlist ha sido puntuada, consulte la lista de playlists para ver el promedio");
+						
+					}
 				}
+			}catch(NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "La puntuación solo admite enteros de 1 a 5","ERROR", JOptionPane.WARNING_MESSAGE);
 			}
-		
 		}
 	}
 
